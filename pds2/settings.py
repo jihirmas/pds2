@@ -34,7 +34,7 @@ DEBUG = True
 
 #This allows the railway app to connect with your project. 
 # ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 #This line helps to link your secret key
 SECRET_KEY=os.getenv('SECRET_KEY')
