@@ -12,7 +12,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os 
-# import dj_database_url
+import dj_database_url
+import secrets
+
+secrets.hex_token(24)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,16 +26,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = 'django-insecure-ukfr00ga@1x&uz+smrb0_jfn*cffb7f@-@na+&l_q!gib#y(95'
+# SECRET_KEY = 'django-insecure-ukfr00ga@1x&uz+smrb0_jfn*cffb7f@-@na+&l_q!gib#y(95'
 # SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# load_dotenv(os.path.join(BASE_DIR,".env"))
+# DEBUG = True
+DEBUG = False
 
-DEBUG = True
-# DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+#This allows the railway app to connect with your project. 
+ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+#This line helps to link your secret key
+SECRET_KEY=os.getenv('SECRET_KEY')
 
 
 # Application definition
@@ -83,21 +89,26 @@ LOGIN_REDIRECT_URL = "/"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'its',
+        'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'Admin123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'PASSWORD': 'aCvoV8HIFXNSRHZkPQS1',
+        'HOST': 'containers-us-west-146.railway.app',
+        'PORT': '6832',
     }
 }
 
 # database_url = os.environ.get("DATABASE_URL")
-# # database_url = "postgres://pds2_user:4LQmbjJiUynppC2C0vLklLFN9AIpdz6q@dpg-cjv69k7hdsdc73bs9v70-a.oregon-postgres.render.com/pds2"
+# database_url = "postgres://pds2_user:4LQmbjJiUynppC2C0vLklLFN9AIpdz6q@dpg-cjv69k7hdsdc73bs9v70-a.oregon-postgres.render.com/pds2"
 # DATABASES['default'] = dj_database_url.parse(database_url)
-
+import dj_database_url
+DATABASE_URL=os.getenv("DATABASE_URL")
+DATABASES={
+    "default":dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -141,4 +152,6 @@ STATICFILES_DIRS = ['static']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'its.User'
+
+CSRF_TRUSTED_ORIGINS=['https://pds2-production.up.railway.app']
 
