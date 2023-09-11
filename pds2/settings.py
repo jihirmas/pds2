@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-# SECRET_KEY = 'django-insecure-ukfr00ga@1x&uz+smrb0_jfn*cffb7f@-@na+&l_q!gib#y(95'
+SECRET_KEY = 'django-insecure-ukfr00ga@1x&uz+smrb0_jfn*cffb7f@-@na+&l_q!gib#y(95'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -33,11 +33,12 @@ DEBUG = True
 # DEBUG = False
 
 #This allows the railway app to connect with your project. 
-# ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 #This line helps to link your secret key
-SECRET_KEY=os.getenv('SECRET_KEY')
+# SECRET_KEY=os.getenv('SECRET_KEY')
+
 
 
 # Application definition
@@ -92,18 +93,18 @@ LOGIN_REDIRECT_URL = "/"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
+        'NAME': 'its',
         'USER': 'postgres',
-        'PASSWORD': 'aCvoV8HIFXNSRHZkPQS1',
-        'HOST': 'containers-us-west-146.railway.app',
-        'PORT': '6832',
+        'PASSWORD': 'Admin123',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
 # database_url = os.environ.get("DATABASE_URL")
-database_url = "postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway"
+# database_url = "postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway"
 
-DATABASES['default'] = dj_database_url.parse(database_url)
+# DATABASES['default'] = dj_database_url.parse(database_url)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -140,8 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = ['static']
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticrt')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
