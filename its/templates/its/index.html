@@ -1,0 +1,64 @@
+{%include 'its/navbar.html'%}
+
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Home</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        {% load static %}
+    </head>
+    <html>
+  
+    <body>
+        <div class="container">
+            <div class="row">
+              <div class="col d-flex justify-content-center align-items-center">
+                {%include 'its/topic_card.html' with puntos=puntaje_tema_1 tareas_tema=tareas_tema_1 intentos_tema=intentos_tema_1 tema="1" nombre_tema="Ecuación Fundamental" descripcion_tema="La ecuación que describe el comportamiento de sistemas físicos mediante la relación entre frecuencia, aceleración y desplazamiento."%}
+              </div>
+              <div class="col d-flex justify-content-center align-items-center">
+                {%include 'its/topic_card.html' with puntos=puntaje_tema_2 tareas_tema=tareas_tema_2 intentos_tema=intentos_tema_2 tema="2" nombre_tema="Péndulo Simple" descripcion_tema="Un sistema oscilatorio compuesto por una masa suspendida de una cuerda o varilla que oscila en un movimiento periódico bajo la influencia de la gravedad."%}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col d-flex justify-content-center align-items-center">
+                {%include 'its/topic_card.html' with puntos=puntaje_tema_3 tareas_tema=tareas_tema_3 intentos_tema=intentos_tema_3 tema="3" nombre_tema="Potenciales" descripcion_tema="Energía asociada a la posición de una partícula en un campo de fuerza, como el potencial gravitatorio o eléctrico."%}
+              </div>
+              <div class="col d-flex justify-content-center align-items-center">
+                {%include 'its/topic_card.html' with puntos=puntaje_tema_4 tareas_tema=tareas_tema_4 intentos_tema=intentos_tema_4 tema="4" nombre_tema="Puntos de Equilibrios" descripcion_tema="Posiciones en las que las fuerzas netas sobre un objeto son nulas, lo que resulta en una posición estable o inestable según las condiciones."%}
+              </div>
+              <div class="col d-flex justify-content-center align-items-center">
+                {%include 'its/topic_card.html' with puntos=puntaje_tema_5 tareas_tema=tareas_tema_5 intentos_tema=intentos_tema_5 tema="5" nombre_tema="Osciladores Acoplados" descripcion_tema="Múltiples osciladores que interactúan entre sí, como dos péndulos conectados, exhibiendo comportamientos oscilatorios complejos influenciados por su acoplamiento."%}
+              </div>
+            </div>
+          </div>
+          
+    </body>
+</html>
+{% include 'its/footer.html' %}
+<style>
+  html, body {
+    background: #9A616D;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .custom-card-3 .additional{
+    background: linear-gradient(#9d96b8, #9d96b8)!important;
+  }
+
+  .custom-card-2 .additional{
+    background: linear-gradient(#9a7197, #9a7197)!important;
+  }
+
+  .custom-card-1 .additional{
+    background: linear-gradient(#886176, #886176)!important;
+  }
+
+  .custom-card-5 .additional{
+    background: linear-gradient(#7c5869, #7c5869)!important;
+  }
+</style>

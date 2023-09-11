@@ -1,0 +1,46 @@
+
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<head>
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+
+<footer class="bg-dark text-center text-white custom-footer">
+    <!-- Grid container -->
+    <div class="container p-4 pb-0">
+      <!-- Section: Social media -->
+      <section class="mb-4">
+        <!-- Github -->
+        <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/pds-uandes/pds-p2-hirmas_gutierrez_aliaga" role="button"
+          ><i class="fab fa-github"></i
+        ></a>
+      </section>
+      <!-- Section: Social media -->
+    </div>
+    <!-- Grid container -->
+  
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2020 Copyright:
+      <a class="text-white" href="https://jihwebsolutions.cl/">JIH WEB SOLUTIONS</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <style>
+    .custom-footer{
+     border-top: 1px solid #fff;
+    }
+    
+    
+    #footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 2.5rem;            /* Footer height */
+    }
+  </style>

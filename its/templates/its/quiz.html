@@ -1,0 +1,163 @@
+{%include 'its/navbar.html'%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% load static %}
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Tarea Tema {{tema}}</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="">
+      {% load bootstrap5 %}
+      {% bootstrap_css %}
+      {% bootstrap_javascript %}
+      
+  </head>
+  <body >
+    <div id="page-container">
+      <div id="content-wrap">
+        <div class="progress">
+          <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+        <div class="container mt-5">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title fw-bold text-center">Quiz</h4>
+              <div id="pregunta-container" class="bg-white px-4">
+                {% for pregunta in data_tarea %}
+                <div class="pregunta pregunta-{{ pregunta.tarea_id }}">
+                  <div class="row col-12">
+                    <h4 class="fw-bold text-center mt-3"></h4>
+                    <form id="quiz-form" class=" bg-white px-4" method="post">
+                      {% csrf_token %}
+                      <p class="fw-bold" style="width:100%!important">{{pregunta.enunciado}}</p>
+                      {% for alternativa in pregunta.alternativas %}
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="pregunta{{ forloop.parentloop.counter }}" id="radio{{ pregunta.tarea_id }}{{ loop.index }}" value="{{ alternativa.id }}">
+                        <label class="form-check-label">
+                          {{ alternativa.texto }}
+                        </label>
+                      </div>
+                      {% endfor %}
+                      <input type="hidden" name="respuestas" id="respuestas" value="{{ alternativa.id }}">
+                    </form>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="text-center mt-3 d-flex justify-content-center">
+              <button id="siguiente-pregunta" class="btn btn-primary">Siguiente</button>
+              <button id="enviar" class="btn btn-primary" style="display: none;">Enviar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <script>
+      const quizForm = document.getElementById('quiz-form');
+      const respuestasInput = document.getElementById('respuestas');
+      const preguntas = document.querySelectorAll('.pregunta');
+      const respuestasUsuario = {}; // Debes declarar la variable aquí
+      
+      let preguntaActual = 0;
+    
+      function mostrarPregunta(numero) {
+        preguntas.forEach((pregunta, index) => {
+          if (index === numero) {
+            pregunta.style.display = 'block';
+          } else {
+            pregunta.style.display = 'none';
+          }
+        });
+    
+        const progressBar = document.getElementById('progress-bar');
+        const preguntaActualSpan = document.getElementById('pregunta-actual');
+    
+        const porcentajeCompletado = ((numero + 1) / preguntas.length) * 100;
+        const preguntasCompletado = (numero + 1);
+        progressBar.style.width = porcentajeCompletado + '%';
+        progressBar.innerText = preguntasCompletado + '/' + preguntas.length;
+    
+        if (preguntaActual === preguntas.length - 1) {
+          // Si estamos en la última pregunta, muestra el botón "Enviar" en lugar de "Siguiente"
+          document.getElementById('siguiente-pregunta').style.display = 'none';
+          document.getElementById('enviar').style.display = 'block';
+        } else {
+          // Si no estamos en la última pregunta, muestra el botón "Siguiente" en lugar de "Enviar"
+          document.getElementById('siguiente-pregunta').style.display = 'block';
+          document.getElementById('enviar').style.display = 'none';
+        }
+      }
+    
+      mostrarPregunta(preguntaActual);
+    
+      const siguienteBtn = document.getElementById('siguiente-pregunta');
+      siguienteBtn.addEventListener('click', () => {
+        const radioButtons = document.querySelectorAll(`input[name="pregunta${preguntaActual + 1}"]:checked`);
+        if (radioButtons.length === 0) {
+          alert('Por favor, seleccione una alternativa antes de continuar.');
+        } else {
+          const preguntaKey = `pregunta${preguntaActual + 1}`;
+          const respuesta = radioButtons[0].value;
+          respuestasUsuario[preguntaKey] = respuesta;
+
+          if (preguntaActual < preguntas.length - 1) {
+            preguntaActual++;
+            mostrarPregunta(preguntaActual);
+          }
+        }
+      });
+
+      const enviarBtn = document.getElementById('enviar');
+      enviarBtn.addEventListener('click', () => {
+        console.log(preguntaActual)
+        const radioButtons = document.querySelectorAll(`input[name="pregunta${preguntaActual + 1}"]:checked`);
+        if (radioButtons.length === 0) {
+          alert('Por favor, seleccione una alternativa antes de enviar.');
+        } else {
+          const preguntaKey = `pregunta${preguntaActual + 1}`;
+          const respuesta = radioButtons[0].value;
+          respuestasUsuario[preguntaKey] = respuesta;
+
+          // Actualiza el campo oculto con las respuestas
+          const respuestasInput = document.getElementById('respuestas');
+          respuestasInput.value = JSON.stringify(respuestasUsuario);
+          // Envía el formulario al controlador Django
+          const quizForm = document.getElementById('quiz-form');
+          const url = new URL(window.location.href);
+
+          // Obtén el valor del parámetro 'tema'
+          const tema = url.searchParams.get('tema');
+          const retry = url.searchParams.get('retry');
+          const jsonObject = JSON.parse(respuestasInput.value);
+          const arrayDeValores = Object.values(jsonObject);
+          console.log(retry);
+
+          if (retry){
+            window.location.href = '/quiz-results/?tema=' + tema + '&respuestas=[' + arrayDeValores + ']&retry=True';
+          }
+          else
+          window.location.href = '/quiz-results/?tema=' + tema + '&respuestas=[' + arrayDeValores + ']';
+          
+        }
+      });
+        
+    
+    </script>   
+  </body>
+<style>
+  #page-container {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  #content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+  }
+</style>
+</html>
+{% include 'its/footer.html' %}

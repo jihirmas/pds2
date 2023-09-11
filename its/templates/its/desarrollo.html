@@ -1,0 +1,153 @@
+{%include 'its/navbar.html'%}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Desarrollo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        {% load static %}
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <div class="container calculo-container">
+            <div class="text-center">
+                <h5 class="card-title font-weight-bold">Tarea N°{{data.tarea}} {{data.pregunta.titulo}}</h5>
+            </div>
+            <div class="card"> 
+                <div class="text-center">
+                    <div>
+                        <img src="data:image/png;base64,{{data.grafico|safe}}" class="imagen-enunciado" alt="...">
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title font-weight-bold" style="text-align: justify; margin: 10px; margin-bottom: 40px;;">{{data.pregunta.enunciado}}</h5>
+                    <form id="formDesarrollo" action="{% url 'procesar_desarrollo' %}" method="post">
+                        <ol class="list-group list-group-numbered">
+                            <li class="list-group-item d-flex justify-content-between align-items-start" id="cajaParam1">
+                                <div class="col-10 ms-2 me-auto">
+                                    <div class="fw-bold">A) {{data.pregunta.enunciadoA}}
+                                        <span class="badge bg-secondary" style="font-size:13px; display:none;" id="hint1">{{data.pregunta.hint1}}</span></h1>
+                                    </div>
+                                    <div class="row mt-3 mb-3">
+                                        <label for="inputParam1" class="col-4 col-form-label">{{data.pregunta.titulo1}} : </label>
+                                        <div class="col-4">
+                                            <input required type="number" step=".01" class="form-control" id="inputParam1" style="flex: 1;border: 1px solid black;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-start" id="cajaParam2">
+                                <div class="col-10 ms-2 me-auto">
+                                    <div class="fw-bold">B) {{data.pregunta.enunciadoB}}
+                                        <span class="badge bg-secondary" style="font-size:13px; display:none;" id="hint2">{{data.pregunta.hint2}}</span></h1>
+                                    </div>
+                                    <div class="row mt-3 mb-3">
+                                        <label for="inputParam2" class="col-4 col-form-label">{{data.pregunta.titulo2}} : </label>
+                                        <div class="col-4 ">
+                                            <input required type="number" step=".01" class="form-control" id="inputParam2" style="flex: 1;border: 1px solid black;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ol>          
+                        <p class="card-text mt-3">Recuerda responer con 2 numeros decimales, y usar punto como separador decimal.</p>
+                        <button type="submit" class="btn btn-primary" id="boton-global">
+                            <span id="botonEnviar">Entregar</span>
+                            <span id="botonReintentar" style="display:none;">Entregar nuevo Intento</span>
+                        </button>
+                        
+                    </form>
+                    <button id="segundoIntento" class="btn btn-primary" style="display:none;" onclick="location.href='/'">Home</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            const param1Correcto = "{{ data.pregunta.param1 }}";
+            const param2Correcto = "{{ data.pregunta.param2 }}";
+            $(document).ready(function() {
+            $("#formDesarrollo").submit(function(event) {
+                event.preventDefault();
+                
+                var param1Value = $("#inputParam1").val();
+                var param2Value = $("#inputParam2").val();
+                var param1Correcto = "{{ data.pregunta.param1 }}";
+                var param2Correcto = "{{ data.pregunta.param2 }}";
+                var tarea = "{{ data.tarea }}";
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/procesar_desarrollo/",
+                    data: {
+                        param1_user: param1Value,
+                        param2_user: param2Value,
+                        param1: param1Correcto,
+                        param2: param2Correcto,
+                        tarea: tarea,
+                    },
+                    
+                    success: function(response) {
+  
+                        // Verifica si la primera pregunta es correcta y aplica el color correspondiente
+                        if (response.pregunta1_correcta) {
+                            $("#inputParam1").css("background-color", "#8ff59d");
+                            $("#cajaParam1").css("background-color", "#8ff59d");
+                            $('#boton-global').css("display", "none");
+                            $('#segundoIntento').css("display", "inline");
+                        } 
+                        if (response.pregunta2_correcta) {
+                            $("#inputParam2").css("background-color", "#8ff59d"); // Usar un color personalizado en hexadecimal
+                            $("#cajaParam2").css("background-color", "#8ff59d");
+                            $('#boton-global').css("display", "none");
+                            $('#segundoIntento').css("display", "inline");
+                        }
+
+                        if (!response.pregunta1_correcta) {
+                            $("#inputParam1").css("background-color", "#f1879a");
+                            $("#cajaParam1").css("background-color", "#f1879a");
+                            //hacer aparecer el hint
+                            $("#hint1").css("display", "inline");
+                            $('#botonEnviar').css("display", "none");
+                            $('#boton-global').css("display", "inline");
+                            $('#botonReintentar').css("display", "inline");
+                            $('#segundoIntento').css("display", "inline");
+                        
+                        }
+                        
+                        if (!response.pregunta2_correcta) {
+                            $("#inputParam2").css("background-color", "#f1879a"); // Usar un color personalizado en hexadecimal
+                            $("#cajaParam2").css("background-color", "#f1879a");
+                            $('#botonEnviar').css("display", "none");
+                            $('#botonReintentar').css("display", "inline");
+                            $('#segundoIntento').css("display", "inline");
+                            $('#boton-global').css("display", "inline");
+                            $("#hint2").css("display", "inline");
+                        }
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            });
+            });
+        </script>
+    </body>
+</html>
+{% include 'its/footer.html' %}
+<style>
+    body{
+        font-family: 'Montserrat', sans-serif!important;
+    }
+    
+    .calculo-container{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .imagen-enunciado{
+    max-width: 700px!important;
+    }
+</style>
+

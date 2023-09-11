@@ -1,0 +1,142 @@
+{%include 'its/navbar.html'%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% load static %}
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Tarea Tema 1</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="">
+      {% load bootstrap5 %}
+      {% bootstrap_css %}
+      {% bootstrap_javascript %}
+      
+  </head>
+  <body >
+    <div id="page-container">
+      <div id="content-wrap">
+        <div class="container mt-5">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title fw-bold text-center">Quiz Results</h4>
+              <div id="pregunta-container" class="bg-white px-4">
+                {% for pregunta, respuesta_usuario in preguntas_y_respuestas %}
+                  <div class="pregunta pregunta-{{ pregunta.tarea_id }}" style="margin-top:20px; margin-bottom:20px;">
+                    <div class="row col-12">
+                      <h6 class="fw-bold text-left">{{ pregunta.enunciado }}</h6>
+                      <ul class="list-group">
+                        {% for alternativa in pregunta.alternativas %}
+                          {% if retry == "FALSE" %}
+                            {% if alternativa.id == respuesta_usuario  and alternativa.correcta %}
+                              <li class="list-group-item list-group-item-success">
+                                {{ alternativa.texto }}
+                              </li>
+                            {% elif  alternativa.id == respuesta_usuario  and not alternativa.correcta %}
+                              <li class="list-group-item list-group-item-danger">
+                                {{ alternativa.texto }}&nbsp&nbsp&nbsp&nbsp<span class="badge bg-secondary" id="respuesta-incorrecta">{{alternativa.hint}}</span></h1>
+                              </li>
+                            {% else %}
+                              <li class="list-group-item">
+                                {{ alternativa.texto }}
+                              </li>
+                            {% endif %}
+                          {% else %}
+                            {% if alternativa.correcta %}
+                              <li class="list-group-item list-group-item-success">
+                                {{ alternativa.texto }}
+                              </li>
+                            {% elif  alternativa.id == respuesta_usuario  and not alternativa.correcta %}
+                              <li class="list-group-item list-group-item-danger">
+                                {{ alternativa.texto }}&nbsp&nbsp&nbsp&nbsp<span class="badge bg-secondary" id="respuesta-incorrecta">{{alternativa.hint}}</span></h1>
+                              </li>
+                            {% else %}
+                              <li class="list-group-item">
+                                {{ alternativa.texto }}
+                              </li>
+                            {% endif %}
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  {% if retry == "FALSE" %}
+                    <div class="text-center mt-3 d-flex justify-content-center">
+                      <button id="enviar" class="btn btn-primary" style="display:none;">Reintentar preguntas incorrectas</button>
+                    </div>
+                    <div class="text-center mt-3 d-flex justify-content-center">
+                      <button id="home" class="btn btn-primary" style="display:none;">Ir al Home</button>
+                    </div>
+                  {% else %}
+                    <div class="text-center mt-3 d-flex justify-content-center">
+                      <button id="home" class="btn btn-primary">Ir al Home</button>
+                    </div>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      const url = new URL(window.location.href);
+      const tema = url.searchParams.get('tema');
+      const retry_param = url.searchParams.get('retry');
+      const respuestas = url.searchParams.get('respuestas');
+      
+      let algunaRespuestaIncorrecta = false; // Variable para rastrear si hay respuestas incorrectas
+    
+      const posibleIncorrecta = document.getElementById('respuesta-incorrecta');
+      if (posibleIncorrecta) {
+        algunaRespuestaIncorrecta = true;
+      }
+
+      // Si hay alguna respuesta incorrecta, mostrar el botón de reintentar
+      if (algunaRespuestaIncorrecta) {
+        if (retry_param == "True"){
+          document.getElementById('home').style.display = 'block';
+        }
+        else{
+          document.getElementById('enviar').style.display = 'block';
+        }
+        
+      }
+      else {
+        document.getElementById('home').style.display = 'block';
+      }
+      const botonEnviar = document.getElementById('enviar');
+      const botonHome = document.getElementById('home');
+      // gestionar botonEnviar
+      if (botonEnviar) {
+        botonEnviar.addEventListener('click', () => {
+          window.location.href = `/quiz?tema=${tema}&retry=True&respuestas=${respuestas}`;
+        });
+      }
+       // gestionar botonHome
+      if (botonHome) {
+        botonHome.addEventListener('click', () => {
+          window.location.href = `/`;
+        });
+      }
+
+
+    </script>
+    
+  </body>
+<style>
+  #page-container {
+    position: relative;
+    min-height: 100%;
+  }
+  
+  #content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+  }
+
+  
+</style>
+</html>
+{% include 'its/footer.html' %}
