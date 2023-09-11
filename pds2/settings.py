@@ -33,11 +33,11 @@ DEBUG = True
 # DEBUG = False
 
 #This allows the railway app to connect with your project. 
-ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
 
 #This line helps to link your secret key
-# SECRET_KEY=os.getenv('SECRET_KEY')
+SECRET_KEY=os.getenv('SECRET_KEY')
 
 
 
@@ -101,10 +101,10 @@ DATABASES = {
     }
 }
 
-# database_url = os.environ.get("DATABASE_URL")
+database_url = os.environ.get("DATABASE_URL")
 # database_url = "postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway"
 
-# DATABASES['default'] = dj_database_url.parse(database_url)
+DATABASES['default'] = dj_database_url.parse(database_url)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
