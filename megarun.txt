@@ -1,1 +1,1 @@
-python manage.py flush --noinput && python manage.py makemigrations && python manage.py migrate && python generate_data.py && python manage.py runserver
+python manage.py collectstatic && python manage.py flush --noinput && python manage.py makemigrations && python manage.py migrate && python generate_data.py && python manage.py runserver

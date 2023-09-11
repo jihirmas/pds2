@@ -101,8 +101,8 @@ DATABASES = {
     }
 }
 
-database_url = os.environ.get("DATABASE_URL")
-# database_url = "postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway"
+# database_url = os.environ.get("DATABASE_URL")
+database_url = "postgresql://postgres:aCvoV8HIFXNSRHZkPQS1@containers-us-west-146.railway.app:6832/railway"
 
 DATABASES['default'] = dj_database_url.parse(database_url)
 
